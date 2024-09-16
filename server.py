@@ -38,6 +38,15 @@ def remove():
     result = service.remove(quantity, type)
     return jsonify({'message': result})
 
+@app.route('/get_count', methods=['GET'])
+def get_count():
+    type = request.args.get('type')  # Get 'type' from query parameters
+    result = service.get_count(type)
+    if result == -1:
+        return jsonify({'message': f"Type '{type}' does not exist."}), 404
+    else:
+        return jsonify({'type': type, 'count': result})
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     app.run(host='0.0.0.0', port=5000, debug=True)
