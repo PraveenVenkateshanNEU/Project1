@@ -52,3 +52,11 @@ class InventoryService:
             self.logger.warning(f"Type '{type}' does not exist.")
             return f"Type '{type}' does not exist."
 
+    def get_count(self, type):
+        if type in self.inventory:
+            count = self.inventory[type]['quantity']
+            self.logger.info(f"Count for type '{type}' is {count}.")
+            return count
+        else:
+            self.logger.warning(f"Type '{type}' does not exist.")
+            return -1
