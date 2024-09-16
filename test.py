@@ -51,6 +51,32 @@ class TestInventoryClient(unittest.TestCase):
         self.assertEqual(response, {'message': 'Undefined type \'widget\'.'})
         mock_post.assert_called_once_with('http://localhost:5000/undefine', headers={'Content-Type': 'application/json'}, data=json.dumps({"type": "widget"}))
 
+    #Test Case 1
+    #Tests the function’s ability to correctly display the item type count.
+    @patch('requests.get')
+    def test_get_count_success_case(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {'count': 10}
+            
+        client = InventoryClient("http://localhost:5000")
+        response = client.get_count("widget")
+            
+        self.assertEqual(response, {'count': 10})
+        mock_get.assert_called_once_with('http://localhost:5000/get_count', params={'type': 'widget'})
+
+    #Test Case 2
+    #Tests the function’s response when an item type does not exist.
+    @patch('requests.get')
+    def test_get_count_type_not_found(self, mock_get):
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = {'message': 'Type \'widget\' does not exist.'}
+            
+        client = InventoryClient("http://localhost:5000")
+        response = client.get_count("widget")
+            
+        self.assertEqual(response, {'message': 'Type \'widget\' does not exist.'})
+        mock_get.assert_called_once_with('http://localhost:5000/get_count', params={'type': 'widget'})
+
 if __name__ == '__main__':
     unittest.main()
 
