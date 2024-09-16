@@ -12,6 +12,12 @@ class InventoryClient:
         response = requests.post(url, headers=headers, data=json.dumps(data) if data else None)
         response.raise_for_status()
         return response.json()
+    
+    def _get(self, endpoint, params=None):
+        url = f"{self.base_url}/{endpoint}"
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        return response.json()
 
     def define_stuff(self, type, description):
         return self._post('define_stuff', {"type": type, "description": description})
@@ -24,6 +30,9 @@ class InventoryClient:
 
     def remove(self, quantity, type):
         return self._post('remove', {"quantity": quantity, "type": type})
+    
+    def get_count(self, type):
+        return self._get('get_count', {"type": type})
 
 # Example usage
 if __name__ == "__main__":
@@ -33,4 +42,5 @@ if __name__ == "__main__":
     print(client.add(10, "widget"))
     print(client.remove(5, "widget"))
     print(client.undefine("widget"))
+    print(client.get_count("widget"))
 
